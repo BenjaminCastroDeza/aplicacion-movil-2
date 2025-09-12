@@ -1,0 +1,33 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-title>Home</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="logout()">
+        <ion-icon slot="icon-only" name="log-out-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <h2 class="ion-text-center">Bienvenido, {{ nombreUsuario }}</h2>
+
+  <ion-tabs>
+    <ion-tab-bar slot="bottom">
+      <ion-tab-button tab="reserva" routerLink="/home2/reserva">
+        <ion-icon name="calendar-outline"></ion-icon>
+        <ion-label>Reserva</ion-label>
+      </ion-tab-button>
+
+      <ion-tab-button tab="mis-reservas" routerLink="/home2/mis-reservas">
+        <ion-icon name="list-outline"></ion-icon>
+        <ion-label>Mis Reservas</ion-label>
+      </ion-tab-button>
+
+      <ion-tab-button tab="perfil" routerLink="/home2/perfil">
+        <ion-icon name="person-outline"></ion-icon>
+        <ion-label>Perfil</ion-label>
+      </ion-tab-button>
+    </ion-tab-bar>
+  </ion-tabs>
+</ion-content>

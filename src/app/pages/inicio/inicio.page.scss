@@ -1,0 +1,54 @@
+ion-content {
+    --background: linear-gradient(135deg, #000000 0%, #000000 100%);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+}
+
+ion-card {
+    margin: auto;
+    width: 100%;
+    max-width: 350px;
+    box-shadow: 0 8px 24px rgba(60, 60, 120, 0.08);
+    border-radius: 18px;
+    animation: fadeIn 1s;
+}
+
+ion-card-title {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: #ffffff;
+    margin-bottom: 0.5rem;
+}
+
+ion-item {
+    --background: transparent;
+    border-radius: 8px;
+    margin-bottom: 12px;
+    box-shadow: 0 2px 8px rgba(60, 60, 120, 0.04);
+}
+
+ion-button {
+    margin-top: 12px;
+    border-radius: 8px;
+    font-weight: 500;
+    letter-spacing: 0.5px;
+    transition: transform 0.2s;
+}
+
+ion-button:hover {
+    transform: scale(1.03);
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}

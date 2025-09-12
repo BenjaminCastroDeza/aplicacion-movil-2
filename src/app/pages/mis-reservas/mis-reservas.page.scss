@@ -1,0 +1,81 @@
+ion-content {
+  --background: linear-gradient(135deg, #000000 0%, #232526 100%);
+  min-height: 100vh;
+}
+
+ion-list {
+  padding: 0 0.5rem;
+}
+
+ion-item {
+  background: #18181b;
+  border-radius: 18px;
+  margin: 18px 0;
+  box-shadow: 0 8px 32px rgba(60, 60, 120, 0.13);
+  transition: box-shadow 0.2s, transform 0.2s;
+  padding: 18px 14px;
+  align-items: flex-start;
+  border: none;
+}
+
+ion-item:hover {
+  box-shadow: 0 12px 36px rgba(60, 60, 120, 0.18);
+  transform: translateY(-2px) scale(1.01);
+}
+
+ion-label {
+  width: 100%;
+}
+
+ion-label h2 {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #fff;
+  margin-bottom: 0.35rem;
+  letter-spacing: 0.5px;
+}
+
+ion-label p {
+  margin: 0 0 2px 0;
+  color: #bbb;
+  font-size: 1rem;
+}
+
+ion-badge {
+  font-size: 1rem;
+  margin-left: 8px;
+  vertical-align: middle;
+  border-radius: 8px;
+  padding: 0.25em 0.8em;
+  box-shadow: 0 2px 8px rgba(60, 60, 120, 0.10);
+}
+
+ion-badge[color="success"] {
+  background: linear-gradient(90deg, #34d399 60%, #6ee7b7 100%);
+  color: #fff;
+}
+
+ion-badge[color="warning"] {
+  background: linear-gradient(90deg, #fbbf24 60%, #fde68a 100%);
+  color: #7c4700;
+}
+
+img[alt="Comprobante"] {
+  display: block;
+  margin: 12px 0 0 0;
+  border-radius: 10px;
+  box-shadow: 0 2px 12px rgba(60, 60, 120, 0.13);
+  max-width: 140px;
+  max-height: 90px;
+  object-fit: cover;
+  border: 2px solid #232526;
+}
+
+ion-button {
+  margin-left: 16px;
+  border-radius: 10px;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  box-shadow: 0 2px 8px rgba(60, 60, 120, 0.10);
+  transition: background 0.2s;
+}
