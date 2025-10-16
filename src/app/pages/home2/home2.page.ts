@@ -11,8 +11,7 @@ import { ReservaService } from '../../services/reserva.service';
 export class Home2Page implements OnInit {
 
   // Guarda el nombre del usuario para mostrarlo en pantalla
-  nombreUsuario: string = '';
-
+  nombre: string = '';
   // Se usan Router para navegar entre paginas y ReservaService para borrar las reservas al cerrar sesión
   constructor(
     private router: Router,
@@ -22,11 +21,10 @@ export class Home2Page implements OnInit {
   //Cuando se carga la página, obtiene el nombre del usuario para mostrarlo en el saludo
   ngOnInit() {
     const navigation = this.router.getCurrentNavigation();
-    const state = navigation?.extras?.state as { usuario: { nombre: string, contrasena: string } };
-
-    if (state && state.usuario) {
-      this.nombreUsuario = state.usuario.nombre;
-      console.log('Usuario recibido:', this.nombreUsuario);
+    const state = navigation?.extras?.state as { nombre: string };
+    if (state && state.nombre) {
+      this.nombre = state.nombre;
+      console.log('Usuario recibido:', this.nombre);
     }
   }
 

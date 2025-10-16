@@ -9,9 +9,14 @@
   </ion-toolbar>
 </ion-header>
 
+<!-- Aquí viene el contenido principal -->
 <ion-content [fullscreen]="true">
-  <h2 class="ion-text-center">Bienvenido, {{ nombreUsuario }}</h2>
+  <h2 class="ion-text-center">Bienvenido, {{ nombre }}</h2>
 
+  <!-- 👇 Este bloque renderiza las rutas hijas -->
+  <ion-router-outlet></ion-router-outlet>
+
+  <!-- Tus tabs permanecen abajo -->
   <ion-tabs>
     <ion-tab-bar slot="bottom">
       <ion-tab-button tab="reserva" routerLink="/home2/reserva">
