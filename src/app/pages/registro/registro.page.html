@@ -1,41 +1,44 @@
 <ion-header [translucent]="true">
   <ion-toolbar>
-    <ion-title>registro</ion-title>
+    <ion-title>Registro</ion-title>
   </ion-toolbar>
 </ion-header>
 
-<ion-content [fullscreen]="true">
-  <ion-content class="ion-padding">
-    <ion-card>
-      <ion-card-header>
-        <ion-card-title>Crear cuenta</ion-card-title>
-      </ion-card-header>
+<ion-content class="ion-padding" [fullscreen]="true">
+  <ion-card>
+    <ion-card-header>
+      <ion-card-title>Crear cuenta</ion-card-title>
+    </ion-card-header>
 
-      <ion-card-content>
-        <ion-item>
-          <ion-label position="floating">Nombre de usuario</ion-label>
-          <ion-input type="text" [(ngModel)]="usuario.nombre"></ion-input>
-        </ion-item>
+    <ion-card-content>
+      <ion-item>
+        <ion-label position="floating">Nombre de usuario</ion-label>
+        <ion-input type="text" [(ngModel)]="usuario.nombre"></ion-input>
+      </ion-item>
 
-        <ion-item>
-          <ion-label position="floating">Correo</ion-label>
-          <ion-input type="email" [(ngModel)]="usuario.correo"></ion-input>
-        </ion-item>
+      <ion-item>
+        <ion-label position="floating">Correo</ion-label>
+        <ion-input type="email" [(ngModel)]="usuario.correo"></ion-input>
+      </ion-item>
 
-        <ion-item>
-          <ion-label position="floating">Contraseña</ion-label>
-          <ion-input type="password" [(ngModel)]="usuario.contrasena"></ion-input>
-        </ion-item>
+      <ion-item>
+        <ion-label position="floating">Contraseña</ion-label>
+        <ion-input type="password" [(ngModel)]="usuario.contrasena"></ion-input>
+      </ion-item>
 
+      <ion-item>
+        <ion-label position="floating">Número Telefónico</ion-label>
+        <ion-input type="tel" [(ngModel)]="usuario.telefono"></ion-input>
+      </ion-item>
 
-        <ion-item>
-          <ion-label position="floating">Numero Telefonico</ion-label>
-          <ion-input type="tel" [(ngModel)]="usuario.telefono"></ion-input>
-        </ion-item>
+      <ion-button expand="block" color="primary" (click)="agregarUsuario()">
+        Crear cuenta
+      </ion-button>
 
-        <ion-button expand="block" (click)="crearCuenta()">Crear cuenta</ion-button>
-      </ion-card-content>
-    </ion-card>
-  </ion-content>
-
+      <!-- 🟢 NUEVO: Botón para volver a inicio -->
+      <ion-button expand="block" fill="outline" color="medium" (click)="irInicio()">
+        Ir al inicio
+      </ion-button>
+    </ion-card-content>
+  </ion-card>
 </ion-content>

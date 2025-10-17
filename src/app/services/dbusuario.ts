@@ -3,6 +3,7 @@ import { SQLite, SQLiteObject } from '@awesome-cordova-plugins/sqlite/ngx';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { Platform, ToastController } from '@ionic/angular';
 import { Usuario } from '../clases/usuario';
+import { take } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
@@ -43,8 +44,8 @@ export class Dbusuario {
     try {
       await this.database.executeSql(this.tblUsuarios, []);
       this.presentToast('Tabla de usuarios creada');
-      this.isDbReady.next(true);
       this.cargarUsuarios();
+      this.isDbReady.next(true);
     } catch (e) {
       this.presentToast('Error al crear la tabla de usuarios: ' + e);
     }
@@ -70,10 +71,6 @@ export class Dbusuario {
   }
 
   async agregarUsuario(nombre: string, correo: string, contrasena: string, telefono: string) {
-    if (!this.database) {
-      throw new Error('Base de datos no inicializada');
-      return;
-    }
     let data = [nombre, correo, contrasena, telefono];
     await this.database.executeSql('INSERT INTO usuario (nombre, correo, contrasena, telefono) VALUES (?, ?, ?, ?)', data);
     this.cargarUsuarios();
@@ -84,14 +81,12 @@ export class Dbusuario {
     const res = await this.database.executeSql('SELECT * FROM usuario WHERE nombre = ? AND contrasena = ?', [nombre, contrasena]);
     return res.rows.length > 0;
   }
-  dbReady(): Promise<void> {
+dbReady(): Promise<void> {
   return new Promise((resolve) => {
     if (this.database) {
       resolve();
     } else {
-      this.isDbReady.subscribe((ready) => {
-        if (ready) resolve();
-      });
+      this.isDbReady.pipe(take(1)).subscribe(() => resolve());
     }
   });
 }

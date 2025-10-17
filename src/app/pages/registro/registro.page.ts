@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { ToastController } from '@ionic/angular';
 import { Router } from '@angular/router';
 import { Dbusuario } from '../../services/dbusuario';
+import { NavController } from '@ionic/angular';
 
 @Component({
   selector: 'app-registro',
@@ -15,10 +16,11 @@ export class RegistroPage {
   constructor(
     private toastController: ToastController,
     private router: Router,
-    private dbusuario: Dbusuario
+    private dbusuario: Dbusuario,
+    private navCtrl: NavController
   ) {}
 
-  async crearCuenta() {
+  async agregarUsuario() {
     if (!this.usuario.nombre || !this.usuario.correo || !this.usuario.contrasena || !this.usuario.telefono) {
       this.presentToast('middle', 'Completa todos los campos', 1000);
       return;
@@ -31,15 +33,15 @@ export class RegistroPage {
       return;
     }
 
-    try {
-      // Guardar usuario en SQLite
-      await this.dbusuario.dbReady
-      await this.dbusuario.agregarUsuario(
-        this.usuario.nombre,
-        this.usuario.correo,
-        this.usuario.contrasena,
-        this.usuario.telefono
-      );
+  await this.dbusuario.dbReady();
+
+  try {
+    await this.dbusuario.agregarUsuario(
+      this.usuario.nombre,
+      this.usuario.correo,
+      this.usuario.contrasena,
+      this.usuario.telefono
+    );
 
       // Mostrar toast de confirmación
       await this.presentToast('middle', 'Cuenta creada correctamente', 1000);
@@ -62,5 +64,8 @@ export class RegistroPage {
       position
     });
     await toast.present();
+  }
+    irInicio() {
+    this.navCtrl.navigateRoot('/inicio');
   }
 }
