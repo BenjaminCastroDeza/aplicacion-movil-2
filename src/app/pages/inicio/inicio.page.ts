@@ -1,49 +1,69 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { ToastController } from '@ionic/angular';
-import { Dbusuario } from '../../services/dbusuario';
+import { BdlocalService } from '../../services/bdlocal.service';
+import { Usuario } from '../../clases/usuario';
 
 @Component({
   selector: 'app-inicio',
   templateUrl: './inicio.page.html',
   styleUrls: ['./inicio.page.scss'],
-  standalone: false
+  standalone: false,
 })
 export class InicioPage implements OnInit {
 
-  usuario: { nombre: string; contrasena: string } = { nombre: '', contrasena: '' };
+  usuario = { nombre: '', contrasena: '' };
+  listaUsuarios: Usuario[] = [];
 
   constructor(
     private toastController: ToastController,
     private router: Router,
-    private dbUsuario: Dbusuario
-  ) { }
+    private bdlocal: BdlocalService
+  ) {}
 
-  ngOnInit() { }
+  async ngOnInit() {
+    // Cargar usuarios desde storage de manera segura
+    await this.bdlocal.cargarUsuarios();
+    this.listaUsuarios = this.bdlocal.mostrarBD();
+
+    console.log('Usuarios cargados:', this.listaUsuarios);
+  }
 
   async login() {
+    console.log('Intento de login:', this.usuario);
+
     if (!this.usuario.nombre || !this.usuario.contrasena) {
-      this.presentToast('middle', 'Completa todos los campos', 1000);
+      this.presentToast('Completa todos los campos', 'middle');
       return;
     }
 
-    // Espera que la DB esté lista
-    await this.dbUsuario.dbReady();
+    // Asegurarse de cargar los datos más recientes
+    await this.bdlocal.cargarUsuarios();
+    this.listaUsuarios = this.bdlocal.mostrarBD();
+    console.log('Usuarios disponibles para validar:', this.listaUsuarios);
 
-    // Valida el usuario
-    const existe = await this.dbUsuario.validarUsuario(this.usuario.nombre, this.usuario.contrasena);
+    // Buscar usuario
+    const usuarioEncontrado = this.listaUsuarios.find(u =>
+      u.nombre === this.usuario.nombre && u.contrasena === this.usuario.contrasena
+    );
 
-    if (existe) {
-      this.router.navigate(['/home2'], { state: { nombre: this.usuario.nombre } });
+    if (usuarioEncontrado) {
+      console.log('Login exitoso:', usuarioEncontrado);
+      this.presentToast('Bienvenido ' + usuarioEncontrado.nombre, 'top');
+      this.router.navigate(['/home2'], { state: { nombre: usuarioEncontrado.nombre } });
     } else {
-      this.presentToast('middle', 'Usuario o contraseña incorrectos', 1000);
+      console.warn('Usuario o contraseña incorrectos');
+      this.presentToast('Usuario o contraseña incorrectos', 'middle');
     }
+
+    // Limpiar campos
+    this.usuario = { nombre: '', contrasena: '' };
   }
 
-  async presentToast(position: 'top' | 'middle' | 'bottom', msg: string, duration?: number) {
+  async presentToast(msg: string, position: 'top' | 'middle' | 'bottom') {
     const toast = await this.toastController.create({
       message: msg,
-      duration: duration ?? 1000,
+      duration: 1500,
       position
     });
     await toast.present();
