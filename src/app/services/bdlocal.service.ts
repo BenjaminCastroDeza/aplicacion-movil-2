@@ -41,7 +41,17 @@ export class BdlocalService {
     if (data) this.agenda = data;
     console.log('Usuarios cargados:', this.agenda);
   }
-
+  async actualizarUsuario(usuario: Usuario) {
+  const index = this.agenda.findIndex(u => u.telefono === usuario.telefono);
+  if (index !== -1) {
+    this.agenda[index] = { ...usuario }; // Reemplaza el usuario existente
+    await this._storage?.set('agenda', this.agenda);
+    console.log('Usuario actualizado en storage:', this.agenda[index]);
+    this.presentToast('Usuario actualizado correctamente');
+  } else {
+    this.presentToast('No se encontró el usuario para actualizar');
+  }
+}
   async quitarUsuarios(telefono: string) {
     const existe = this.agenda.find(c => c.telefono === telefono);
     if (existe) {

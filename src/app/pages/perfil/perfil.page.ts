@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ToastController } from '@ionic/angular';
-
+import { BdlocalService } from '../../services/bdlocal.service';
+import { Usuario } from '../../clases/usuario';
 
 @Component({
   selector: 'app-perfil',
@@ -10,43 +11,72 @@ import { ToastController } from '@ionic/angular';
 })
 export class PerfilPage implements OnInit {
 
-  // Datos actuales del usuario
-  usuario = {
-    nombre: 'Benjamin Castro',
-    email: 'benjaminc@gmail.com',
-    telefono: '919191919'
-  };
+  usuario!: Usuario;       // Datos actuales del usuario
+  usuarioEdit!: Usuario;   // Copia editable para el formulario
 
-  //Copia editable de los datos del usuario, usada en el formulario 
-  usuarioEdit = { ...this.usuario };
+  constructor(
+    private toastController: ToastController,
+    private bdlocal: BdlocalService
+  ) { }
 
-  constructor(private toastController: ToastController) {}
-
-  //Al cargar la página, reinicia los datos editables con los datos actuales
-  ngOnInit() {
-    this.resetUsuarioEdit();
+  async ngOnInit() {
+    await this.cargarUsuarioActual();
   }
 
-  // Cada vez que se entra a la página esto reinicia los datos editables con los datos actuales
-
+  // Cada vez que se entra a la página, actualizamos los datos editables
   ionViewWillEnter() {
     this.resetUsuarioEdit();
   }
 
-  // Restaura los datos editables a los valores actuales del usuario
-  resetUsuarioEdit() {
-    this.usuarioEdit = { ...this.usuario };
+  // Carga el primer usuario registrado (o el que haya iniciado sesión)
+  async cargarUsuarioActual() {
+    await this.bdlocal.cargarUsuarios();           // Espera a que los datos se carguen
+    const lista = await this.bdlocal.mostrarBD(); // Array de usuarios
+
+    if (lista.length > 0) {
+      this.usuario = { ...lista[0] };   // Aquí puedes ajustar según el usuario logueado
+      this.resetUsuarioEdit();
+      console.log('Usuario cargado:', this.usuario);
+    } else {
+      console.warn('No hay usuarios en la base de datos');
+      this.usuario = new Usuario('', '', '', '');
+      this.resetUsuarioEdit();
+    }
   }
 
-  // Guarda los cambios realizados en el formulario y muestra un mensaje de confirmación
-  async guardarCambios() {
-    this.usuario = { ...this.usuarioEdit };
+  // Copia los datos actuales a la versión editable
+  resetUsuarioEdit() {
+    if (this.usuario) {
+      this.usuarioEdit = { ...this.usuario };
+    }
+  }
 
+  // Guarda los cambios realizados en el formulario
+async guardarCambios() {
+  // Comprobamos si hubo cambios reales
+  const sinCambios =
+    this.usuario.nombre === this.usuarioEdit.nombre &&
+    this.usuario.correo === this.usuarioEdit.correo &&
+    this.usuario.contrasena === this.usuarioEdit.contrasena &&
+    this.usuario.telefono === this.usuarioEdit.telefono;
+
+  if (sinCambios) {
     const toast = await this.toastController.create({
-      message: 'Datos actualizados correctamente',
+      message: 'No se realizaron cambios',
       duration: 2000,
       position: 'bottom',
     });
     toast.present();
+    return;
   }
+
+  // Actualizamos los datos locales
+  this.usuario = { ...this.usuarioEdit };
+
+  // Guardamos en el storage (actualiza si existe)
+  await this.bdlocal.actualizarUsuario(this.usuario);
+
+  console.log('Usuario actualizado:', this.usuario);
+}
+
 }
