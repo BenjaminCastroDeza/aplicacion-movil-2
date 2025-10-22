@@ -43,18 +43,16 @@ export class InicioPage implements OnInit {
     console.log('Usuarios disponibles para validar:', this.listaUsuarios);
 
     // Buscar usuario
-    const usuarioEncontrado = this.listaUsuarios.find(u =>
-      u.nombre === this.usuario.nombre && u.contrasena === this.usuario.contrasena
-    );
+  const usuarioEncontrado = this.listaUsuarios.find(u =>
+    u.nombre === this.usuario.nombre && u.contrasena === this.usuario.contrasena
+  );
 
-    if (usuarioEncontrado) {
-      console.log('Login exitoso:', usuarioEncontrado);
-      this.presentToast('Bienvenido ' + usuarioEncontrado.nombre, 'top');
-      this.router.navigate(['/home2'], { state: { nombre: usuarioEncontrado.nombre } });
-    } else {
-      console.warn('Usuario o contraseña incorrectos');
-      this.presentToast('Usuario o contraseña incorrectos', 'middle');
-    }
+  if (usuarioEncontrado) {
+    this.bdlocal.usuarioActual = usuarioEncontrado; // ✅ guardar sesión
+    console.log('Login exitoso:', usuarioEncontrado);
+    this.presentToast('Bienvenido ' + usuarioEncontrado.nombre, 'top');
+    this.router.navigate(['/home2']);
+  }
 
     // Limpiar campos
     this.usuario = { nombre: '', contrasena: '' };

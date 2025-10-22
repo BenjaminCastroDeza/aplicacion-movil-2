@@ -1,3 +1,4 @@
+// src/app/services/bdlocal.service.ts
 import { Injectable } from '@angular/core';
 import { Storage } from '@ionic/storage-angular';
 import { Usuario } from '../clases/usuario';
@@ -10,30 +11,27 @@ export class BdlocalService {
 
   agenda: Usuario[] = [];
   private _storage: Storage | null = null;
+  
+  usuarioActual?: Usuario | null// ✅ usuario logueado
+
 
   constructor(private storage: Storage, private toastController: ToastController) {
     this.init();
   }
-
   async init() {
     const storage = await this.storage.create();
     this._storage = storage;
     await this.cargarUsuarios();
+    await this.cargarSesion(); // ✅ cargar sesión al iniciar
     console.log('BdlocalService listo');
   }
-
   guardarUsuario(nombre: string, correo: string, contrasena: string, telefono: string) {
-    const existe = this.agenda.find(c => c.telefono === telefono);
-    if (!existe) {
-      const nuevo = new Usuario(nombre, correo, contrasena, telefono);
-      this.agenda.unshift(nuevo);
-      this._storage?.set('agenda', this.agenda);
-      console.log('Usuario agregado:', nuevo);
-      this.presentToast("Usuario agregado");
-    } else {
-      console.warn('Usuario ya existe:', telefono);
-      this.presentToast("Usuario ya existe");
-    }
+    const nuevo = new Usuario(nombre, correo, contrasena, telefono);
+    nuevo.id = new Date().getTime(); // ID único
+    this.agenda.unshift(nuevo);
+    this._storage?.set('agenda', this.agenda);
+    console.log('Usuario agregado:', nuevo);
+    this.presentToast("Usuario agregado");
   }
 
   async cargarUsuarios() {
@@ -41,38 +39,28 @@ export class BdlocalService {
     if (data) this.agenda = data;
     console.log('Usuarios cargados:', this.agenda);
   }
+
   async actualizarUsuario(usuario: Usuario) {
-  const index = this.agenda.findIndex(u => u.telefono === usuario.telefono);
-  if (index !== -1) {
-    this.agenda[index] = { ...usuario }; // Reemplaza el usuario existente
-    await this._storage?.set('agenda', this.agenda);
-    console.log('Usuario actualizado en storage:', this.agenda[index]);
-    this.presentToast('Usuario actualizado correctamente');
-  } else {
-    this.presentToast('No se encontró el usuario para actualizar');
-  }
-}
-  async quitarUsuarios(telefono: string) {
-    const existe = this.agenda.find(c => c.telefono === telefono);
-    if (existe) {
-      this.agenda = this.agenda.filter(c => c.telefono !== telefono);
+    const index = this.agenda.findIndex(u => u.id === usuario.id);
+    if (index !== -1) {
+      this.agenda[index] = { ...usuario };
       await this._storage?.set('agenda', this.agenda);
-      console.log('Usuario eliminado:', telefono);
-      this.presentToast("Usuario eliminado");
+      console.log('Usuario actualizado en storage:', this.agenda[index]);
+      this.presentToast('Usuario actualizado correctamente');
     } else {
-      console.warn('Ese usuario no existe:', telefono);
-      this.presentToast("Ese usuario no existe");
+      this.presentToast('No se encontró el usuario para actualizar');
     }
   }
+  async setUsuarioActual(usuario: Usuario | null) {
+  this.usuarioActual = usuario;
+  await this._storage?.set('usuarioActual', usuario); // persistencia real
+}
 
-  async borrarBD() {
-    await this._storage?.clear();
-    this.agenda = [];
-    console.log('Base de datos eliminada');
-    this.presentToast("Base de datos eliminada");
-  }
+async cargarSesion() {
+  const u = await this._storage?.get('usuarioActual');
+  if (u) this.usuarioActual = u;
+}
 
-  // ✅ Método sincrónico para obtener el array directamente
   mostrarBD(): Usuario[] {
     return this.agenda;
   }
@@ -81,7 +69,7 @@ export class BdlocalService {
     const toast = await this.toastController.create({
       message: msg,
       duration: 1500,
-      position: 'top'
+      position: 'bottom'
     });
     toast.present();
   }

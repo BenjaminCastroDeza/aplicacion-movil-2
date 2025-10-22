@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { ToastController } from '@ionic/angular';
-import { ReservaService } from '../../services/reserva.service'; // Importa el servicio de reservas
+import { ReservaService, Reserva } from '../../services/reserva.service';
+import { BdlocalService } from '../../services/bdlocal.service';
+import { Usuario } from '../../clases/usuario';
 
 @Component({
   selector: 'app-reserva',
@@ -10,51 +12,67 @@ import { ReservaService } from '../../services/reserva.service'; // Importa el s
 })
 export class ReservaPage implements OnInit {
 
-  // Objeto que almacena los datos de la reserva
-  reserva = {
+  usuarioActual!: Usuario;
+
+  reserva: Partial<Reserva> = {
     nombre: '',
     fecha: '',
-    hora: '', 
-    personas: 1,  
+    hora: '',
+    personas: 1,
     pago: 'pendiente',
     comprobante: ''
-  }
+  };
 
-  // Array que contiene las horas disponibles para reservas
   horasDisponibles: string[] = [];
 
   constructor(
     private toastController: ToastController,
-    private reservaService: ReservaService
+    private reservaService: ReservaService,
+    private bdlocal: BdlocalService
   ) {}
 
-  ngOnInit() {
-    this.generarHoras();
-  }
-
-  // Genera un listado de horas disponibles desde las 12:00 hasta las 20:00
+    async ngOnInit() {
+      this.generarHoras();
+      this.usuarioActual = this.bdlocal.usuarioActual!;
+      if (!this.usuarioActual) {
+        console.warn('No hay usuario logueado');
+      } else {
+        console.log('Usuario actual:', this.usuarioActual);
+      }
+}
   generarHoras() {
-    for (let i = 12; i < 21; i++) {
+    for (let i = 12; i <= 20; i++) {
       const horaStr = i.toString().padStart(2, '0') + ':00';
       this.horasDisponibles.push(horaStr);
     }
   }
 
-  // Guarda la reserva ingresada en el formulario
   async hacerReserva() {
-    // Validación de campos obligatorios
     if (!this.reserva.nombre || !this.reserva.fecha || !this.reserva.hora || !this.reserva.personas) {
       this.presentToast('Por favor, completa todos los campos');
       return;
     }
 
-    // Guarda la reserva mediante el servicio
-    this.reservaService.agregarReserva({ ...this.reserva });
+    if (!this.usuarioActual) {
+      this.presentToast('No hay usuario logueado');
+      return;
+    }
 
-    // Muestra mensaje de confirmación
+  const nuevaReserva: Reserva = {
+    id: new Date().getTime(),
+    userId: this.usuarioActual.id!, // ✅ asignar a usuario correcto
+    nombre: this.reserva.nombre!,
+    fecha: this.reserva.fecha!,
+    hora: this.reserva.hora!,
+    personas: this.reserva.personas!,
+    pago: 'pendiente',
+    comprobante: ''
+  };
+
+    await this.reservaService.agregarReserva(nuevaReserva);
+
     this.presentToast('Reserva realizada con éxito');
 
-    // Reinicia los datos del formulario
     this.reserva = { nombre: '', fecha: '', hora: '', personas: 1, pago: 'pendiente', comprobante: '' };
   }
 
@@ -62,7 +80,7 @@ export class ReservaPage implements OnInit {
     const toast = await this.toastController.create({
       message,
       duration: 2000,
-      position: 'bottom',
+      position: 'bottom'
     });
     toast.present();
   }

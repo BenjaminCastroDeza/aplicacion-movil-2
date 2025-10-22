@@ -1,7 +1,8 @@
 import { Component } from '@angular/core';
-import { ReservaService } from '../../services/reserva.service';
+import { ReservaService, Reserva } from '../../services/reserva.service';
+import { BdlocalService } from '../../services/bdlocal.service';
 import { Camera, CameraResultType, CameraSource } from '@capacitor/camera';
-
+import { Usuario } from '../../clases/usuario';
 
 @Component({
   selector: 'app-mis-reservas',
@@ -10,18 +11,27 @@ import { Camera, CameraResultType, CameraSource } from '@capacitor/camera';
   standalone: false
 })
 export class MisReservasPage {
-  // Arreglo con todas las reservas del usuario
-  reservas: any[] = [];
+  reservas: Reserva[] = [];
+  usuario!: Usuario;
 
-  constructor(private reservaService: ReservaService) { }
+  constructor(private reservaService: ReservaService, private bdlocal: BdlocalService) { }
 
-  //Cada vez que se entra a la pagina, actualiza la lista de reservas.
-
-  ionViewWillEnter() {
-    this.reservas = this.reservaService.obtenerReservas();
+async ionViewWillEnter() {
+  this.usuario = this.bdlocal.usuarioActual!;
+  if (!this.usuario) {
+    console.warn('No hay usuario logueado');
+    this.reservas = [];
+    return;
   }
 
-//Permite al usuario seleccionar una imagen de la galeria como comprobante de pago.
+  this.filtrarReservas();
+}
+
+filtrarReservas() {
+  this.reservas = this.reservaService.getReservasUsuario(this.usuario.id!);
+  console.log('Reservas filtradas:', this.reservas);
+}
+
   async subirComprobante(index: number) {
     try {
       const image = await Camera.getPhoto({
@@ -31,11 +41,14 @@ export class MisReservasPage {
         source: CameraSource.Photos
       });
 
-      // Actualiza la reserva con la imagen y cambia el estado de pago
-      this.reservas[index].comprobante = image.dataUrl;
+      // Aseguramos que dataUrl no sea undefined
+      this.reservas[index].comprobante = image.dataUrl || '';
       this.reservas[index].pago = 'confirmado';
+
+      // Actualizar reserva en el servicio y storage
+      await this.reservaService.actualizarReserva(this.reservas[index]);
+
     } catch (error) {
-      // El usuario canceló o hubo un error
       console.log('No se seleccionó imagen');
     }
   }
