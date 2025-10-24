@@ -11,45 +11,53 @@ import { Usuario } from '../../clases/usuario';
 })
 export class PerfilPage implements OnInit {
 
-  usuario!: Usuario;       // Datos actuales del usuario
-  usuarioEdit!: Usuario;   // Copia editable para el formulario
+  // Usuario actual logueado
+  usuario!: Usuario;
+
+  // Copia del usuario para editar en el formulario
+  usuarioEdit!: Usuario;
 
   constructor(
     private toastController: ToastController,
     private bdlocal: BdlocalService
   ) { }
 
+  // Se ejecuta al inicializar la página
   async ngOnInit() {
     await this.cargarUsuarioActual();
   }
 
+  // Se ejecuta cada vez que la vista entra en pantalla
   ionViewWillEnter() {
     this.resetUsuarioEdit();
   }
 
-  // Carga el usuario actualmente logueado según su ID
+  // Carga el usuario logueado desde el almacenamiento local
   async cargarUsuarioActual() {
     await this.bdlocal.cargarUsuarios();
     const lista = this.bdlocal.mostrarBD();
 
     if (lista.length > 0) {
-      // Aquí podrías usar un servicio de sesión para traer al usuario logueado
+      // Toma el primer usuario como ejemplo de usuario logueado
       this.usuario = { ...lista[0] };
       this.resetUsuarioEdit();
       console.log('Usuario cargado:', this.usuario);
     } else {
+      // Si no hay usuarios guardados, inicializa uno vacío
       this.usuario = new Usuario('', '', '', '');
       this.resetUsuarioEdit();
       console.warn('No hay usuarios en la base de datos');
     }
   }
 
+  // Restaura los valores editables al original
   resetUsuarioEdit() {
     if (this.usuario) {
       this.usuarioEdit = { ...this.usuario };
     }
   }
 
+  // Guarda los cambios del perfil si hubo modificaciones
   async guardarCambios() {
     const sinCambios =
       this.usuario.nombre === this.usuarioEdit.nombre &&
@@ -67,10 +75,10 @@ export class PerfilPage implements OnInit {
       return;
     }
 
-    // Actualizamos datos locales
+    // Actualiza los datos en memoria
     this.usuario = { ...this.usuarioEdit };
 
-    // Guardamos cambios en storage usando ID
+    // Guarda los cambios en el storage local
     await this.bdlocal.actualizarUsuario(this.usuario);
 
     console.log('Usuario actualizado:', this.usuario);

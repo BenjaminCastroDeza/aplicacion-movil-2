@@ -11,11 +11,15 @@ import { Usuario } from '../../clases/usuario';
   standalone: false
 })
 export class MisReservasPage {
+  // Lista de reservas del usuario logueado
   reservas: Reserva[] = [];
+
+  // Usuario actualmente autenticado
   usuario!: Usuario;
 
   constructor(private reservaService: ReservaService, private bdlocal: BdlocalService) { }
 
+  // Se ejecuta cada vez que la vista va a mostrarse
   async ionViewWillEnter() {
     this.usuario = this.bdlocal.usuarioActual!;
     if (!this.usuario) {
@@ -27,11 +31,13 @@ export class MisReservasPage {
     this.filtrarReservas();
   }
 
+  // Filtra las reservas del usuario actual
   filtrarReservas() {
     this.reservas = this.reservaService.getReservasUsuario(this.usuario.id!);
     console.log('Reservas filtradas:', this.reservas);
   }
 
+  // Permite subir un comprobante de pago mediante la cámara o galería
   async subirComprobante(index: number) {
     try {
       const image = await Camera.getPhoto({
@@ -41,11 +47,11 @@ export class MisReservasPage {
         source: CameraSource.Photos
       });
 
-      // Aseguramos que dataUrl no sea undefined
+      // Guarda la imagen como comprobante y marca el pago como confirmado
       this.reservas[index].comprobante = image.dataUrl || '';
       this.reservas[index].pago = 'confirmado';
 
-      // Actualizar reserva en el servicio y storage
+      // Actualiza la reserva en el servicio y el almacenamiento local
       await this.reservaService.actualizarReserva(this.reservas[index]);
 
     } catch (error) {

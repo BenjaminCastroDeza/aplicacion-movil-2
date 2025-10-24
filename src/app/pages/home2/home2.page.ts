@@ -11,6 +11,7 @@ import { BdlocalService } from '../../services/bdlocal.service';
 })
 export class Home2Page implements OnInit {
 
+  // Nombre del usuario logueado
   nombre: string = '';
 
   constructor(
@@ -19,15 +20,16 @@ export class Home2Page implements OnInit {
     private bdlocal: BdlocalService
   ) { }
 
+  // Carga la sesión y muestra el nombre del usuario
   async ngOnInit() {
-    await this.bdlocal.cargarSesion(); // 👈 asegura que cargue el usuario del storage
+    await this.bdlocal.cargarSesion();
 
     const navigation = this.router.getCurrentNavigation();
     const state = navigation?.extras?.state as { nombre: string };
 
     if (state && state.nombre) {
       this.nombre = state.nombre;
-      await this.bdlocal.setUsuarioActual({ nombre: this.nombre } as any); // 👈 guarda también en storage
+      await this.bdlocal.setUsuarioActual({ nombre: this.nombre } as any);
     } else if (this.bdlocal.usuarioActual) {
       this.nombre = this.bdlocal.usuarioActual.nombre;
     } else {
@@ -35,10 +37,10 @@ export class Home2Page implements OnInit {
     }
   }
 
-
+  // Cierra sesión y redirige a inicio
   logout() {
     this.reservaService.limpiarReservas();
-    this.bdlocal.logout(); // <-- limpia Storage también
+    this.bdlocal.logout();
     this.router.navigate(['/inicio']);
   }
 }

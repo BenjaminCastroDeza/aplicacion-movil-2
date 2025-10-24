@@ -1,4 +1,3 @@
-// src/app/services/bdlocal.service.ts
 import { Injectable } from '@angular/core';
 import { Storage } from '@ionic/storage-angular';
 import { Usuario } from '../clases/usuario';
@@ -9,22 +8,27 @@ import { ToastController } from '@ionic/angular';
 })
 export class BdlocalService {
 
+  // Lista de usuarios guardados
   agenda: Usuario[] = [];
   private _storage: Storage | null = null;
 
-  usuarioActual?: Usuario | null// ✅ usuario logueado
-
+  // Usuario con sesión activa
+  usuarioActual?: Usuario | null
 
   constructor(private storage: Storage, private toastController: ToastController) {
     this.init();
   }
+
+  // Inicializa el storage y carga datos/sesión
   async init() {
     const storage = await this.storage.create();
     this._storage = storage;
     await this.cargarUsuarios();
-    await this.cargarSesion(); // ✅ cargar sesión al iniciar
+    await this.cargarSesion(); // carga sesión al iniciar
     console.log('BdlocalService listo');
   }
+
+  // Crea y guarda un nuevo usuario
   guardarUsuario(nombre: string, correo: string, contrasena: string, telefono: string) {
     const nuevo = new Usuario(nombre, correo, contrasena, telefono);
     nuevo.id = new Date().getTime(); // ID único
@@ -34,12 +38,14 @@ export class BdlocalService {
     this.presentToast("Usuario agregado");
   }
 
+  // Carga la lista de usuarios desde Storage
   async cargarUsuarios() {
     const data = await this._storage?.get('agenda');
     if (data) this.agenda = data;
     console.log('Usuarios cargados:', this.agenda);
   }
 
+  // Actualiza un usuario existente por ID
   async actualizarUsuario(usuario: Usuario) {
     const index = this.agenda.findIndex(u => u.id === usuario.id);
     if (index !== -1) {
@@ -51,6 +57,8 @@ export class BdlocalService {
       this.presentToast('No se encontró el usuario para actualizar');
     }
   }
+
+  // Define o limpia el usuario con sesión activa en Storage
   async setUsuarioActual(usuario: Usuario | null) {
     this.usuarioActual = usuario;
     if (usuario) {
@@ -62,9 +70,9 @@ export class BdlocalService {
     }
   }
 
-
+  // Carga el usuario con sesión activa desde Storage
   async cargarSesion() {
-    if (!this._storage) await this.init(); // Asegura que el storage esté listo
+    if (!this._storage) await this.init(); // asegura storage listo
     const u = await this._storage?.get('usuarioActual');
     if (u) {
       this.usuarioActual = u;
@@ -73,6 +81,8 @@ export class BdlocalService {
       console.log('⚠️ No hay sesión activa guardada');
     }
   }
+
+  // Cierra sesión y limpia Storage
   async logout() {
     this.usuarioActual = null;
     await this._storage?.remove('usuarioActual');
@@ -80,11 +90,12 @@ export class BdlocalService {
     this.presentToast('Has cerrado sesión');
   }
 
-
+  // Devuelve la base de usuarios en memoria
   mostrarBD(): Usuario[] {
     return this.agenda;
   }
 
+  // Muestra un toast breve
   async presentToast(msg: string) {
     const toast = await this.toastController.create({
       message: msg,

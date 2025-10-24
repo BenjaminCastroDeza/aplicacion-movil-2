@@ -12,8 +12,10 @@ import { Usuario } from '../../clases/usuario';
 })
 export class ReservaPage implements OnInit {
 
+  // Usuario logueado
   usuarioActual!: Usuario;
 
+  // Modelo del formulario de reserva
   reserva: Partial<Reserva> = {
     nombre: '',
     fecha: '',
@@ -23,6 +25,7 @@ export class ReservaPage implements OnInit {
     comprobante: ''
   };
 
+  // Opciones de horas a mostrar
   horasDisponibles: string[] = [];
 
   constructor(
@@ -31,6 +34,7 @@ export class ReservaPage implements OnInit {
     private bdlocal: BdlocalService
   ) { }
 
+  // Inicializa horas y obtiene usuario actual
   async ngOnInit() {
     this.generarHoras();
     this.usuarioActual = this.bdlocal.usuarioActual!;
@@ -40,6 +44,8 @@ export class ReservaPage implements OnInit {
       console.log('Usuario actual:', this.usuarioActual);
     }
   }
+
+  // Genera horas en formato HH:00 entre 12 y 20
   generarHoras() {
     for (let i = 12; i <= 20; i++) {
       const horaStr = i.toString().padStart(2, '0') + ':00';
@@ -47,6 +53,7 @@ export class ReservaPage implements OnInit {
     }
   }
 
+  // Valida y crea una nueva reserva
   async hacerReserva() {
     if (!this.reserva.nombre || !this.reserva.fecha || !this.reserva.hora || !this.reserva.personas) {
       this.presentToast('Por favor, completa todos los campos');
@@ -60,7 +67,7 @@ export class ReservaPage implements OnInit {
 
     const nuevaReserva: Reserva = {
       id: new Date().getTime(),
-      userId: this.usuarioActual.id!, // ✅ asignar a usuario correcto
+      userId: this.usuarioActual.id!, // asigna la reserva al usuario
       nombre: this.reserva.nombre!,
       fecha: this.reserva.fecha!,
       hora: this.reserva.hora!,
@@ -73,9 +80,11 @@ export class ReservaPage implements OnInit {
 
     this.presentToast('Reserva realizada con éxito');
 
+    // Limpia el formulario
     this.reserva = { nombre: '', fecha: '', hora: '', personas: 1, pago: 'pendiente', comprobante: '' };
   }
 
+  // Muestra un toast breve
   async presentToast(message: string) {
     const toast = await this.toastController.create({
       message,

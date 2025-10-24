@@ -12,7 +12,10 @@ import { Usuario } from '../../clases/usuario';
 })
 export class InicioPage implements OnInit {
 
+  // Datos ingresados por el usuario en el formulario de login
   usuario = { nombre: '', contrasena: '' };
+
+  // Lista de usuarios registrados
   listaUsuarios: Usuario[] = [];
 
   constructor(
@@ -21,49 +24,51 @@ export class InicioPage implements OnInit {
     private bdlocal: BdlocalService
   ) { }
 
+  // Carga inicial de usuarios almacenados
   async ngOnInit() {
-    // Cargar usuarios desde storage de manera segura
     await this.bdlocal.cargarUsuarios();
     this.listaUsuarios = this.bdlocal.mostrarBD();
-
     console.log('Usuarios cargados:', this.listaUsuarios);
   }
 
+  // Verifica las credenciales e inicia sesión
   async login() {
     console.log('Intento de login:', this.usuario);
 
+    // Validación de campos vacíos
     if (!this.usuario.nombre || !this.usuario.contrasena) {
       this.presentToast('Completa todos los campos', 'middle');
       return;
     }
 
-    // Asegurarse de cargar los datos más recientes
+    // Cargar datos actualizados antes de validar
     await this.bdlocal.cargarUsuarios();
     this.listaUsuarios = this.bdlocal.mostrarBD();
     console.log('Usuarios disponibles para validar:', this.listaUsuarios);
 
-    // Buscar usuario
+    // Buscar coincidencia con usuario registrado
     const usuarioEncontrado = this.listaUsuarios.find(u =>
       u.nombre === this.usuario.nombre && u.contrasena === this.usuario.contrasena
     );
 
- if (usuarioEncontrado) {
-    console.log('✅ Usuario logueado correctamente:', usuarioEncontrado);
+    if (usuarioEncontrado) {
+      console.log('✅ Usuario logueado correctamente:', usuarioEncontrado);
 
-    // 🔹 Guardar la sesión activa en el Storage
-    await this.bdlocal.setUsuarioActual(usuarioEncontrado);
+      // Guarda la sesión activa en Storage
+      await this.bdlocal.setUsuarioActual(usuarioEncontrado);
 
-    // 🔹 Navegar a Home2 con el nombre en el state
-    this.router.navigate(['/home2'], { state: { nombre: usuarioEncontrado.nombre } });
+      // Navega a Home2 enviando el nombre del usuario
+      this.router.navigate(['/home2'], { state: { nombre: usuarioEncontrado.nombre } });
 
-    // (Opcional) Toast de bienvenida
-    this.presentToast(`Bienvenido ${usuarioEncontrado.nombre}`, 'bottom');
-  } else {
-    console.warn('❌ Usuario no encontrado o credenciales incorrectas');
-    this.presentToast('Usuario o contraseña incorrectos', 'middle');
+      // Mensaje de bienvenida
+      this.presentToast(`Bienvenido ${usuarioEncontrado.nombre}`, 'bottom');
+    } else {
+      console.warn('❌ Usuario no encontrado o credenciales incorrectas');
+      this.presentToast('Usuario o contraseña incorrectos', 'middle');
+    }
   }
-}
 
+  // Muestra un mensaje temporal (toast)
   async presentToast(msg: string, position: 'top' | 'middle' | 'bottom') {
     const toast = await this.toastController.create({
       message: msg,
