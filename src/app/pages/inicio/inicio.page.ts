@@ -19,7 +19,7 @@ export class InicioPage implements OnInit {
     private toastController: ToastController,
     private router: Router,
     private bdlocal: BdlocalService
-  ) {}
+  ) { }
 
   async ngOnInit() {
     // Cargar usuarios desde storage de manera segura
@@ -43,20 +43,26 @@ export class InicioPage implements OnInit {
     console.log('Usuarios disponibles para validar:', this.listaUsuarios);
 
     // Buscar usuario
-  const usuarioEncontrado = this.listaUsuarios.find(u =>
-    u.nombre === this.usuario.nombre && u.contrasena === this.usuario.contrasena
-  );
+    const usuarioEncontrado = this.listaUsuarios.find(u =>
+      u.nombre === this.usuario.nombre && u.contrasena === this.usuario.contrasena
+    );
 
-  if (usuarioEncontrado) {
-    this.bdlocal.usuarioActual = usuarioEncontrado; // ✅ guardar sesión
-    console.log('Login exitoso:', usuarioEncontrado);
-    this.presentToast('Bienvenido ' + usuarioEncontrado.nombre, 'top');
-    this.router.navigate(['/home2']);
-  }
+ if (usuarioEncontrado) {
+    console.log('✅ Usuario logueado correctamente:', usuarioEncontrado);
 
-    // Limpiar campos
-    this.usuario = { nombre: '', contrasena: '' };
+    // 🔹 Guardar la sesión activa en el Storage
+    await this.bdlocal.setUsuarioActual(usuarioEncontrado);
+
+    // 🔹 Navegar a Home2 con el nombre en el state
+    this.router.navigate(['/home2'], { state: { nombre: usuarioEncontrado.nombre } });
+
+    // (Opcional) Toast de bienvenida
+    this.presentToast(`Bienvenido ${usuarioEncontrado.nombre}`, 'bottom');
+  } else {
+    console.warn('❌ Usuario no encontrado o credenciales incorrectas');
+    this.presentToast('Usuario o contraseña incorrectos', 'middle');
   }
+}
 
   async presentToast(msg: string, position: 'top' | 'middle' | 'bottom') {
     const toast = await this.toastController.create({

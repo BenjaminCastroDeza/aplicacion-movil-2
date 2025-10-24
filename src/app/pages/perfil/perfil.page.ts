@@ -34,7 +34,7 @@ export class PerfilPage implements OnInit {
 
     if (lista.length > 0) {
       // Aquí podrías usar un servicio de sesión para traer al usuario logueado
-      this.usuario = { ...lista[0] }; 
+      this.usuario = { ...lista[0] };
       this.resetUsuarioEdit();
       console.log('Usuario cargado:', this.usuario);
     } else {

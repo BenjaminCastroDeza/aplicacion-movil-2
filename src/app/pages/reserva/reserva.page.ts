@@ -29,17 +29,17 @@ export class ReservaPage implements OnInit {
     private toastController: ToastController,
     private reservaService: ReservaService,
     private bdlocal: BdlocalService
-  ) {}
+  ) { }
 
-    async ngOnInit() {
-      this.generarHoras();
-      this.usuarioActual = this.bdlocal.usuarioActual!;
-      if (!this.usuarioActual) {
-        console.warn('No hay usuario logueado');
-      } else {
-        console.log('Usuario actual:', this.usuarioActual);
-      }
-}
+  async ngOnInit() {
+    this.generarHoras();
+    this.usuarioActual = this.bdlocal.usuarioActual!;
+    if (!this.usuarioActual) {
+      console.warn('No hay usuario logueado');
+    } else {
+      console.log('Usuario actual:', this.usuarioActual);
+    }
+  }
   generarHoras() {
     for (let i = 12; i <= 20; i++) {
       const horaStr = i.toString().padStart(2, '0') + ':00';
@@ -58,16 +58,16 @@ export class ReservaPage implements OnInit {
       return;
     }
 
-  const nuevaReserva: Reserva = {
-    id: new Date().getTime(),
-    userId: this.usuarioActual.id!, // ✅ asignar a usuario correcto
-    nombre: this.reserva.nombre!,
-    fecha: this.reserva.fecha!,
-    hora: this.reserva.hora!,
-    personas: this.reserva.personas!,
-    pago: 'pendiente',
-    comprobante: ''
-  };
+    const nuevaReserva: Reserva = {
+      id: new Date().getTime(),
+      userId: this.usuarioActual.id!, // ✅ asignar a usuario correcto
+      nombre: this.reserva.nombre!,
+      fecha: this.reserva.fecha!,
+      hora: this.reserva.hora!,
+      personas: this.reserva.personas!,
+      pago: 'pendiente',
+      comprobante: ''
+    };
 
     await this.reservaService.agregarReserva(nuevaReserva);
 

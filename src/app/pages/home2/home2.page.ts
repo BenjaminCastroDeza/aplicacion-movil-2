@@ -19,29 +19,26 @@ export class Home2Page implements OnInit {
     private bdlocal: BdlocalService
   ) { }
 
-  ngOnInit() {
-    // Intentar primero obtener el nombre desde el state
+  async ngOnInit() {
+    await this.bdlocal.cargarSesion(); // 👈 asegura que cargue el usuario del storage
+
     const navigation = this.router.getCurrentNavigation();
     const state = navigation?.extras?.state as { nombre: string };
-    
+
     if (state && state.nombre) {
       this.nombre = state.nombre;
-      // Guardar temporalmente en el servicio para persistencia en recargas
-      this.bdlocal.usuarioActual = { nombre: this.nombre } as any;
-      console.log('Usuario recibido desde state:', this.nombre);
+      await this.bdlocal.setUsuarioActual({ nombre: this.nombre } as any); // 👈 guarda también en storage
     } else if (this.bdlocal.usuarioActual) {
-      // Si no hay state, tomar el usuario guardado en el servicio
       this.nombre = this.bdlocal.usuarioActual.nombre;
-      console.log('Usuario recibido desde servicio:', this.nombre);
     } else {
-      console.warn('No se encontró usuario logueado');
       this.nombre = '';
     }
   }
 
+
   logout() {
     this.reservaService.limpiarReservas();
-    this.bdlocal.usuarioActual = null;
+    this.bdlocal.logout(); // <-- limpia Storage también
     this.router.navigate(['/inicio']);
   }
 }

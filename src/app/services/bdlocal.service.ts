@@ -11,7 +11,7 @@ export class BdlocalService {
 
   agenda: Usuario[] = [];
   private _storage: Storage | null = null;
-  
+
   usuarioActual?: Usuario | null// ✅ usuario logueado
 
 
@@ -52,14 +52,34 @@ export class BdlocalService {
     }
   }
   async setUsuarioActual(usuario: Usuario | null) {
-  this.usuarioActual = usuario;
-  await this._storage?.set('usuarioActual', usuario); // persistencia real
-}
+    this.usuarioActual = usuario;
+    if (usuario) {
+      await this._storage?.set('usuarioActual', usuario);
+      console.log('👤 Usuario guardado en Storage:', usuario);
+    } else {
+      await this._storage?.remove('usuarioActual');
+      console.log('🚪 Sesión cerrada, Storage limpio');
+    }
+  }
 
-async cargarSesion() {
-  const u = await this._storage?.get('usuarioActual');
-  if (u) this.usuarioActual = u;
-}
+
+  async cargarSesion() {
+    if (!this._storage) await this.init(); // Asegura que el storage esté listo
+    const u = await this._storage?.get('usuarioActual');
+    if (u) {
+      this.usuarioActual = u;
+      console.log('✅ Sesión cargada:', this.usuarioActual);
+    } else {
+      console.log('⚠️ No hay sesión activa guardada');
+    }
+  }
+  async logout() {
+    this.usuarioActual = null;
+    await this._storage?.remove('usuarioActual');
+    console.log('🚪 Sesión cerrada, Storage limpio');
+    this.presentToast('Has cerrado sesión');
+  }
+
 
   mostrarBD(): Usuario[] {
     return this.agenda;

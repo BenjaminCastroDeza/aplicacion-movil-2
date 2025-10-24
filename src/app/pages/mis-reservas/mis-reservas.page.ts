@@ -16,21 +16,21 @@ export class MisReservasPage {
 
   constructor(private reservaService: ReservaService, private bdlocal: BdlocalService) { }
 
-async ionViewWillEnter() {
-  this.usuario = this.bdlocal.usuarioActual!;
-  if (!this.usuario) {
-    console.warn('No hay usuario logueado');
-    this.reservas = [];
-    return;
+  async ionViewWillEnter() {
+    this.usuario = this.bdlocal.usuarioActual!;
+    if (!this.usuario) {
+      console.warn('No hay usuario logueado');
+      this.reservas = [];
+      return;
+    }
+
+    this.filtrarReservas();
   }
 
-  this.filtrarReservas();
-}
-
-filtrarReservas() {
-  this.reservas = this.reservaService.getReservasUsuario(this.usuario.id!);
-  console.log('Reservas filtradas:', this.reservas);
-}
+  filtrarReservas() {
+    this.reservas = this.reservaService.getReservasUsuario(this.usuario.id!);
+    console.log('Reservas filtradas:', this.reservas);
+  }
 
   async subirComprobante(index: number) {
     try {

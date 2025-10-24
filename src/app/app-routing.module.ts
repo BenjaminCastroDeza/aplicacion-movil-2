@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { PreloadAllModules, RouterModule, Routes } from '@angular/router';
+import { AuthGuard } from './guards/auth-guard';
 
 const routes: Routes = [
   {
@@ -9,27 +10,31 @@ const routes: Routes = [
   },
   {
     path: 'inicio',
-    loadChildren: () => import('./pages/inicio/inicio.module').then( m => m.InicioPageModule)
+    loadChildren: () => import('./pages/inicio/inicio.module').then( m => m.InicioPageModule),
   },
   {
     path: 'registro',
-    loadChildren: () => import('./pages/registro/registro.module').then( m => m.RegistroPageModule)
+    loadChildren: () => import('./pages/registro/registro.module').then( m => m.RegistroPageModule),
   },
   {
     path: 'home2',
-    loadChildren: () => import('./pages/home2/home2.module').then( m => m.Home2PageModule)
+    loadChildren: () => import('./pages/home2/home2.module').then( m => m.Home2PageModule),
+    canActivate: [AuthGuard]
   },
   {
     path: 'reserva',
-    loadChildren: () => import('./pages/reserva/reserva.module').then( m => m.ReservaPageModule)
+    loadChildren: () => import('./pages/reserva/reserva.module').then( m => m.ReservaPageModule),
+    canActivate: [AuthGuard]
   },
   {
     path: 'perfil',
-    loadChildren: () => import('./pages/perfil/perfil.module').then( m => m.PerfilPageModule)
+    loadChildren: () => import('./pages/perfil/perfil.module').then( m => m.PerfilPageModule),
+    canActivate: [AuthGuard]
   },
   {
     path: 'mis-reservas',
-    loadChildren: () => import('./pages/mis-reservas/mis-reservas.module').then( m => m.MisReservasPageModule)
+    loadChildren: () => import('./pages/mis-reservas/mis-reservas.module').then( m => m.MisReservasPageModule),
+    canActivate: [AuthGuard]
   },
   {
     path: '**',
