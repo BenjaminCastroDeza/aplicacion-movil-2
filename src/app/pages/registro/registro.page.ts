@@ -29,7 +29,7 @@ export class RegistroPage {
     return;
   }
 
-  // Validar si ya existe un usuario con el mismo nombre o correo
+  // Validar si ya existe un usuario con el mismo nombre, correo o telefono
   await this.bdlocal.cargarUsuarios();
   const existe = this.bdlocal.mostrarBD().some(u =>
     u.nombre.trim().toLowerCase() === this.usuario.nombre.trim().toLowerCase() ||

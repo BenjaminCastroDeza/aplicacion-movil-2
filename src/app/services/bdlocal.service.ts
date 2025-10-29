@@ -27,15 +27,19 @@ export class BdlocalService {
     await this.cargarSesion(); // carga sesión al iniciar
     console.log('BdlocalService listo');
   }
+    async generarIdIncremental(claveContador: string): Promise<number> {
+    const contador = (await this._storage?.get(claveContador)) || 0;
+    const nuevoId = contador + 1;
+    await this._storage?.set(claveContador, nuevoId);
+    return nuevoId;
+  }
 
   // Crea y guarda un nuevo usuario
-  guardarUsuario(nombre: string, correo: string, contrasena: string, telefono: string) {
+  async guardarUsuario(nombre: string, correo: string, contrasena: string, telefono: string) {
     const nuevo = new Usuario(nombre, correo, contrasena, telefono);
-    nuevo.id = new Date().getTime(); // ID único
+    nuevo.id = await this.generarIdIncremental('contadorUsuarios'); // 👈 se usa acá
     this.agenda.unshift(nuevo);
-    this._storage?.set('agenda', this.agenda);
-    console.log('Usuario agregado:', nuevo);
-    this.presentToast("Usuario agregado");
+    await this._storage?.set('agenda', this.agenda);
   }
 
   // Carga la lista de usuarios desde Storage

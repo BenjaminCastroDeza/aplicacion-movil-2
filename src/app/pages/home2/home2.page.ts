@@ -39,7 +39,6 @@ export class Home2Page implements OnInit {
 
   // Cierra sesión y redirige a inicio
   logout() {
-    this.reservaService.limpiarReservas();
     this.bdlocal.logout();
     this.router.navigate(['/inicio']);
   }
