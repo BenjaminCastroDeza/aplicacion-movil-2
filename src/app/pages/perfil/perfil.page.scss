@@ -1,0 +1,57 @@
+ion-content {
+    --background: linear-gradient(135deg, #000000 0%, #232526 100%);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+}
+
+form {
+    width: 100%;
+    max-width: 350px;
+    background: #18181b;
+    border-radius: 18px;
+    box-shadow: 0 8px 24px rgba(60, 60, 120, 0.13);
+    padding: 2rem 1.5rem 1.5rem 1.5rem;
+    animation: fadeIn 1s;
+}
+
+ion-item {
+    --background: transparent;
+    border-radius: 8px;
+    margin-bottom: 14px;
+    box-shadow: 0 2px 8px rgba(60, 60, 120, 0.04);
+}
+
+ion-label {
+    font-weight: 500;
+    color: #fff;
+}
+
+ion-input {
+    color: #fff;
+    font-size: 1.05rem;
+}
+
+ion-button {
+    margin-top: 14px;
+    border-radius: 8px;
+    font-weight: 500;
+    letter-spacing: 0.5px;
+    transition: transform 0.2s;
+}
+
+ion-button:hover {
+    transform: scale(1.03);
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}

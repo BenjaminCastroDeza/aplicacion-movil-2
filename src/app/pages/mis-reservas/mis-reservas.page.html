@@ -1,0 +1,35 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-title>Mis Reservas</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <ion-list *ngIf="reservas.length > 0; else sinReservas">
+    <ion-item *ngFor="let reserva of reservas; let i = index">
+      <ion-label>
+        <h2>{{ reserva.nombre }}</h2>
+        <p>Fecha: {{ reserva.fecha }}</p>
+        <p>Hora: {{ reserva.hora }}</p>
+        <p>Personas: {{ reserva.personas }}</p>
+        <p>
+          Pago: 
+          <ion-badge [color]="reserva.pago === 'confirmado' ? 'success' : 'warning'">
+            {{ reserva.pago }}
+          </ion-badge>
+        </p>
+        <div *ngIf="reserva.comprobante">
+          <img [src]="reserva.comprobante" alt="Comprobante" style="max-width: 100px; margin-top: 8px;">
+        </div>
+      </ion-label>
+      <ion-button *ngIf="reserva.pago === 'pendiente'" (click)="subirComprobante(i)" slot="end">
+        Subir Comprobante
+      </ion-button>
+    </ion-item>
+  </ion-list>
+  <ng-template #sinReservas>
+    <ion-text color="medium">
+      <p class="ion-text-center ion-padding">No tienes reservas registradas.</p>
+    </ion-text>
+  </ng-template>
+</ion-content>

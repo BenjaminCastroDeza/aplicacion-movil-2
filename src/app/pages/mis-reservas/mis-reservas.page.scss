@@ -1,0 +1,89 @@
+ion-content {
+  --background: linear-gradient(to bottom, #5f6dfb 0%, #f9f6f1 60%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+ion-header {
+  background: transparent;
+}
+
+ion-toolbar {
+  --background: transparent;
+  color: #fff;
+}
+
+ion-title {
+  font-weight: bold;
+  text-align: center;
+  color: #fff;
+  font-size: 22px;
+}
+
+/* Contenedor general de la lista */
+ion-list {
+  background: #ffffff;
+  border-radius: 25px;
+  width: 90%;
+  max-width: 400px;
+  padding: 20px;
+  margin-top: 25px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+}
+
+/* Cada item de reserva */
+ion-item {
+  --background: transparent;
+  border-bottom: 1px solid #ccc;
+  margin-bottom: 15px;
+  color: #2d2d2d;
+}
+
+ion-label h2 {
+  font-weight: bold;
+  color: #2d2d2d;
+  margin-bottom: 6px;
+}
+
+ion-label p {
+  font-size: 15px;
+  color: #555;
+  margin: 2px 0;
+}
+
+/* Badge de pago */
+ion-badge {
+  font-size: 13px;
+  padding: 4px 8px;
+  border-radius: 6px;
+  text-transform: capitalize;
+}
+
+/* Botón “Subir Comprobante” */
+ion-button {
+  --background: #5f6dfb;
+  --border-radius: 10px;
+  font-weight: 600;
+  box-shadow: 0 4px 10px rgba(95, 109, 251, 0.3);
+  margin-top: 8px;
+}
+
+ion-button:hover {
+  filter: brightness(1.1);
+}
+
+/* Imagen del comprobante */
+img {
+  border-radius: 10px;
+  margin-top: 8px;
+  max-width: 100px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Texto de “sin reservas” */
+p.ion-text-center {
+  color: #555;
+  font-size: 16px;
+  margin-top: 20px;
+}
