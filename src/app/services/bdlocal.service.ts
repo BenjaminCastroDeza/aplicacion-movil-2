@@ -50,14 +50,27 @@ export class BdlocalService {
   }
 
   // Actualiza un usuario existente por ID
+<<<<<<< HEAD
 async actualizarUsuario(usuario: Usuario) {
+=======
+  async actualizarUsuario(usuario: Usuario) {
+>>>>>>> 5eb95e6f3031d9d20c5e311279b9e19a530c3b72
     const index = this.agenda.findIndex(u => u.id === usuario.id);
     if (index !== -1) {
       this.agenda[index] = { ...usuario };
       await this._storage?.set('agenda', this.agenda);
+<<<<<<< HEAD
       this.presentToast('Usuario actualizado correctamente');
     }
 }
+=======
+      console.log('Usuario actualizado en storage:', this.agenda[index]);
+      this.presentToast('Usuario actualizado correctamente');
+    } else {
+      this.presentToast('No se encontró el usuario para actualizar');
+    }
+  }
+>>>>>>> 5eb95e6f3031d9d20c5e311279b9e19a530c3b72
 
   // Define o limpia el usuario con sesión activa en Storage
   async setUsuarioActual(usuario: Usuario | null) {
