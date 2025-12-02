@@ -1,0 +1,102 @@
+/* ============================
+   FONDO GENERAL
+============================ */
+ion-content {
+  --background: linear-gradient(to bottom, #5f6dfb 0%, #f9f6f1 60%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-top: 20px;
+  color: #000 !important; /* 👈 Todo el texto dentro del content será negro */
+}
+
+/* ============================
+   HEADER
+============================ */
+ion-header {
+  background: transparent;
+}
+
+ion-toolbar {
+  --background: transparent;
+  color: #000 !important; /* 👈 Títulos / iconos negros */
+}
+
+ion-title {
+  text-align: center;
+  color: #000 !important;
+  font-weight: bold;
+}
+
+/* ============================
+   TEXTOS GENERALES
+============================ */
+h1, h2, h3, h4, p, span, ion-label {
+  color: #000 !important; /* 👈 Todo texto negro */
+}
+
+/* ============================
+   INPUTS
+============================ */
+ion-item {
+  --background: transparent;
+  --padding-start: 0;
+  border-bottom: 1px solid #888; 
+  margin-bottom: 12px;
+  color: #000 !important;
+}
+
+ion-input {
+  font-size: 16px;
+  color: #000 !important;
+}
+
+/* ============================
+   BOTONES
+============================ */
+ion-button {
+  --border-radius: 10px;
+  margin-top: 10px;
+  font-weight: bold;
+  color: #fff;
+}
+
+ion-button:first-of-type {
+  --background: #5f6dfb;
+}
+
+ion-button[fill="clear"],
+ion-button:last-of-type {
+  --background: transparent;
+  --border-color: #5f6dfb;
+  border: 1px solid #5f6dfb;
+  color: #5f6dfb !important;
+}
+
+/* ============================
+   CARD
+============================ */
+ion-card {
+  background: #ffffff;
+  border-radius: 25px;
+  width: 90%;
+  max-width: 400px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+}
+
+/* ============================
+   TABS
+============================ */
+ion-tab-bar {
+  --background: #ffffff;
+  border-radius: 20px 20px 0 0;
+  box-shadow: 0 -5px 20px rgba(0, 0, 0, 0.08);
+}
+
+ion-tab-button {
+  color: #5f6dfb;
+}
+
+ion-icon {
+  color: #5f6dfb;
+}

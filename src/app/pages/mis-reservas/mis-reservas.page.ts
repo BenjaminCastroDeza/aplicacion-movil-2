@@ -43,21 +43,20 @@ export class MisReservasPage {
   async subirComprobante(index: number) {
     try {
       const image = await Camera.getPhoto({
-        quality: 70,
+        quality: 80,
         allowEditing: false,
         resultType: CameraResultType.DataUrl,
-        source: CameraSource.Photos
+        source: CameraSource.Prompt,
+        saveToGallery: false
       });
 
-      // Guarda la imagen como comprobante y marca el pago como confirmado
       this.reservas[index].comprobante = image.dataUrl || '';
       this.reservas[index].pago = 'confirmado';
 
-      // Actualiza la reserva en el servicio y el almacenamiento local
       await this.reservaService.actualizarReserva(this.reservas[index]);
 
     } catch (error) {
-      console.log('No se seleccionó imagen');
+      console.log('No se tomó foto');
     }
   }
 }

@@ -1,0 +1,108 @@
+/* =========================
+   Recuperar.page.scss
+   Mantiene el diseño morado original
+   y fuerza texto negro para buena legibilidad
+   ========================= */
+
+/* Fondo degradado morado -> crema */
+:host {
+  display: block;
+}
+
+ion-content {
+  /* tu degradado morado original */
+  --background: linear-gradient(to bottom, #5f6dfb 0%, #f9f6f1 60%) !important;
+  background: var(--background) !important;
+
+  /* centrar contenido y dar espacio superior similar al login */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px;
+  color: #000 !important; /* texto siempre negro */
+}
+
+/* pequeña forma superior para simular header purple */
+.header-shape {
+  position: absolute;
+  top: 0;
+  width: 100%;
+  height: 28%;
+  background: #5f6dfb;
+  border-bottom-left-radius: 50px;
+  border-bottom-right-radius: 50px;
+  z-index: 1;
+}
+
+/* tarjeta blanca centrada donde queda el formulario */
+.recuperar-card {
+  position: relative;
+  z-index: 2;
+  background: #ffffff;
+  border-radius: 20px;
+  width: 94%;
+  max-width: 420px;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.12);
+  margin-top: 70px;
+  padding: 18px;
+  color: #000 !important;
+}
+
+/* Header dentro de la tarjeta */
+.recuperar-card ion-card-header,
+.recuperar-card ion-card-title {
+  text-align: center;
+  color: #000 !important;
+  font-weight: 700;
+  margin-bottom: 6px;
+}
+
+/* Forzar labels e inputs negros y visibles */
+ion-item {
+  --background: transparent;
+  --padding-start: 0;
+  border-bottom: 1px solid #ddd;
+  margin-bottom: 14px;
+  color: #000 !important;
+}
+
+ion-label {
+  color: #000 !important;
+  opacity: 1 !important; /* evita translúz */
+}
+
+ion-input {
+  color: #000 !important;
+  font-size: 16px;
+}
+
+/* Botón principal morado consistente con tu tema */
+ion-button.enviar {
+  --border-radius: 10px;
+  --background: #5f6dfb;
+  --box-shadow: none;
+  color: #fff !important;
+  margin-top: 12px;
+}
+
+/* Botón secundario (clear) */
+ion-button.cancel {
+  --background: transparent;
+  --border-color: #5f6dfb;
+  border: 1px solid #5f6dfb;
+  color: #5f6dfb !important;
+  margin-top: 8px;
+}
+
+/* Ajustes responsivos: evitar que el contenido se pegue al header */
+@media (max-width: 420px) {
+  .recuperar-card {
+    margin-top: 60px;
+    padding: 14px;
+  }
+}
+
+/* Forzar TODO el texto dentro de la página a negro por seguridad */
+:host, :host * {
+  color: #000 !important;
+}

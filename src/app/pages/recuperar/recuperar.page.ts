@@ -1,32 +1,29 @@
 import { Component } from '@angular/core';
-import { ToastController, NavController } from '@ionic/angular';
+import { ToastController } from '@ionic/angular';
 import { BdlocalService } from '../../services/bdlocal.service';
 import { Usuario } from '../../clases/usuario';
+import { EmailComposer } from '@awesome-cordova-plugins/email-composer/ngx';
 
 @Component({
   selector: 'app-recuperar',
   templateUrl: './recuperar.page.html',
   styleUrls: ['./recuperar.page.scss'],
-  standalone: false
+  standalone: false 
 })
 export class RecuperarPage {
 
-  paso = 1; // Paso 1: ingresar correo / Paso 2: nueva contraseña
   correo = '';
-  nuevaContrasena = '';
   usuarioEncontrado: Usuario | null = null;
 
   constructor(
     private bdlocal: BdlocalService,
     private toast: ToastController,
-    private nav: NavController
+    private emailComposer: EmailComposer
   ) {}
 
-  async buscarUsuario() {
+  async enviarCorreo() {
     await this.bdlocal.cargarUsuarios();
     const lista = this.bdlocal.mostrarBD();
-
-    // Buscar por correo
     this.usuarioEncontrado = lista.find(u => u.correo === this.correo) || null;
 
     if (!this.usuarioEncontrado) {
@@ -34,26 +31,17 @@ export class RecuperarPage {
       return;
     }
 
-    this.paso = 2;
-  }
+    // Armar correo
+    const correo = {
+      to: this.usuarioEncontrado.correo,
+      subject: 'Recuperación de contraseña',
+      body: `Hola, tu contraseña es: <b>${this.usuarioEncontrado.contrasena}</b>`,
+      isHtml: true
+    };
 
-  async cambiarContrasena() {
-    if (this.nuevaContrasena.trim().length < 4) {
-      this.mostrarToast('La contraseña debe tener al menos 4 caracteres');
-      return;
-    }
-
-    // Actualizar contraseña
-    this.usuarioEncontrado!.contrasena = this.nuevaContrasena;
-    await this.bdlocal.actualizarUsuario(this.usuarioEncontrado!);
-
-    this.mostrarToast('Contraseña actualizada correctamente');
-
-    this.nav.back();
-  }
-
-  volver() {
-    this.paso = 1;
+    // Abrir cliente de correo
+    this.emailComposer.open(correo);
+    this.mostrarToast('Se ha abierto tu app de correo para enviar la contraseña');
   }
 
   async mostrarToast(msg: string) {

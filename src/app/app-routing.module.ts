@@ -36,13 +36,10 @@ const routes: Routes = [
     loadChildren: () => import('./pages/mis-reservas/mis-reservas.module').then( m => m.MisReservasPageModule),
     canActivate: [AuthGuard]
   },
-<<<<<<< HEAD
     {
     path: 'recuperar',
     loadChildren: () => import('./pages/recuperar/recuperar.module').then( m => m.RecuperarPageModule)
   },
-=======
->>>>>>> 5eb95e6f3031d9d20c5e311279b9e19a530c3b72
   {
     path: '**',
     loadChildren: () => import('./pages/page404/page404.module').then( m => m.Page404PageModule)

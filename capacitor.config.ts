@@ -1,9 +1,13 @@
 import type { CapacitorConfig } from '@capacitor/cli';
 
 const config: CapacitorConfig = {
-  appId: 'com.example.app',
-  appName: 'ProyectoSemestral',
-  webDir: 'www'
+  plugins: {
+    Camera: {
+      allowEditing: false,
+      saveToGallery: false,
+      resultType: 'base64'
+    }
+  }
 };
 
 export default config;

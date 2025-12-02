@@ -1,57 +1,51 @@
 ion-content {
-    --background: linear-gradient(135deg, #000000 0%, #232526 100%);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    min-height: 100vh;
+  --background: linear-gradient(to bottom, #5f6dfb 0%, #f9f6f1 60%);
+  padding-top: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
+/* Header */
+ion-header {
+  background: transparent;
+}
+
+ion-toolbar {
+  --background: transparent;
+  color: #fff;
+}
+
+ion-title {
+  text-align: center;
+  font-weight: bold;
+  color: #fff;
+}
+
+/* Formulario */
 form {
-    width: 100%;
-    max-width: 350px;
-    background: #18181b;
-    border-radius: 18px;
-    box-shadow: 0 8px 24px rgba(60, 60, 120, 0.13);
-    padding: 2rem 1.5rem 1.5rem 1.5rem;
-    animation: fadeIn 1s;
+  width: 90%;
+  max-width: 400px;
 }
 
+/* Items estilo línea inferior */
 ion-item {
-    --background: transparent;
-    border-radius: 8px;
-    margin-bottom: 14px;
-    box-shadow: 0 2px 8px rgba(60, 60, 120, 0.04);
+  --background: transparent;
+  --padding-start: 0;
+  border-bottom: 1px solid #ccc;
+  margin-bottom: 15px;
 }
 
 ion-label {
-    font-weight: 500;
-    color: #fff;
+  color: #2d2d2d;
 }
 
 ion-input {
-    color: #fff;
-    font-size: 1.05rem;
+  font-size: 16px;
 }
 
+/* Botón */
 ion-button {
-    margin-top: 14px;
-    border-radius: 8px;
-    font-weight: 500;
-    letter-spacing: 0.5px;
-    transition: transform 0.2s;
-}
-
-ion-button:hover {
-    transform: scale(1.03);
-}
-
-@keyframes fadeIn {
-    from {
-        opacity: 0;
-        transform: translateY(30px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
+  --border-radius: 10px;
+  --background: #5f6dfb;
 }
