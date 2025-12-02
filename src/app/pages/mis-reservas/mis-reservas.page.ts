@@ -21,7 +21,7 @@ export class MisReservasPage {
 
   // Se ejecuta cada vez que la vista va a mostrarse
   async ionViewWillEnter() {
-    await this.bdlocal.cargarSesion();                 //  garantiza sesión
+    await this.bdlocal.cargarSesion();       
     this.usuario = this.bdlocal.usuarioActual!;
     if (!this.usuario) {
       console.warn('No hay usuario logueado');
@@ -29,8 +29,8 @@ export class MisReservasPage {
       return;
     }
 
-    await this.reservaService.cargarReservas();        // trae del Storage
-    this.filtrarReservas();                            // filtra por userId
+    await this.reservaService.cargarReservas();  
+    this.filtrarReservas();                            
   }
 
   // Filtra las reservas del usuario actual

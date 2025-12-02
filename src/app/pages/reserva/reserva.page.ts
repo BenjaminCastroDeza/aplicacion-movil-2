@@ -37,7 +37,7 @@ export class ReservaPage implements OnInit {
   // Inicializa horas y obtiene usuario actual
 async ngOnInit() {
   this.generarHoras();
-  await this.bdlocal.cargarSesion();          // 👈 asegura sesión cargada
+  await this.bdlocal.cargarSesion();
   this.usuarioActual = this.bdlocal.usuarioActual!;
   if (!this.usuarioActual) {
     console.warn('No hay usuario logueado');
@@ -46,7 +46,6 @@ async ngOnInit() {
   }
 }
 
-  // Genera horas en formato HH:00 entre 12 y 20
   generarHoras() {
     for (let i = 12; i <= 20; i++) {
       const horaStr = i.toString().padStart(2, '0') + ':00';
@@ -67,7 +66,7 @@ async ngOnInit() {
     }
 
     const nuevaReserva: Reserva = {
-      userId: this.usuarioActual.id!, // Asigna la reserva al usuario
+      userId: this.usuarioActual.id!,
       nombre: this.reserva.nombre!,
       fecha: this.reserva.fecha!,
       hora: this.reserva.hora!,
@@ -84,7 +83,6 @@ async ngOnInit() {
     this.reserva = { nombre: '', fecha: '', hora: '', personas: 1, pago: 'pendiente', comprobante: '' };
   }
 
-  // Muestra un toast breve
   async presentToast(message: string) {
     const toast = await this.toastController.create({
       message,

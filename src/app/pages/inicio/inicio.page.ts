@@ -22,7 +22,7 @@ export class InicioPage implements OnInit {
   ) { }
 
   async ngOnInit() {
-    await this.bdlocal.init();  // 👈 IMPORTANTE: asegura Storage cargado
+    await this.bdlocal.init(); 
     this.listaUsuarios = this.bdlocal.mostrarBD();
 
     console.log('Usuarios cargados:', this.listaUsuarios);

@@ -18,34 +18,30 @@ export interface Reserva {
 })
 export class ReservaService {
 
-  private _storage: Storage | null = null;  // Instancia del almacenamiento local
-  private reservas: Reserva[] = [];         // Lista de reservas en memoria
+  private _storage: Storage | null = null;
+  private reservas: Reserva[] = [];
 
   constructor(private storage: Storage) {
-    this.init(); // Inicializa el almacenamiento al crear el servicio
+    this.init();
   }
 
-  // 🟦 Inicializa el almacenamiento y carga las reservas guardadas
   async init() {
     const storage = await this.storage.create();
     this._storage = storage;
     await this.cargarReservas();
   }
 
-  // 🟦 Carga las reservas existentes desde el almacenamiento local
   async cargarReservas() {
     const data = await this._storage?.get('reservas');
     if (data) this.reservas = data;
   }
 
-  // 🟨 Agrega una nueva reserva al almacenamiento
   async agregarReserva(reserva: Reserva) {
-    reserva.id = new Date().getTime(); // Genera un ID único basado en la fecha actual
+    reserva.id = new Date().getTime();
     this.reservas.push(reserva);
-    await this._storage?.set('reservas', this.reservas); // Guarda en Storage
+    await this._storage?.set('reservas', this.reservas);
   }
 
-  // 🟨 Actualiza una reserva existente
   async actualizarReserva(reserva: Reserva) {
     const index = this.reservas.findIndex(r => r.id === reserva.id);
     if (index !== -1) {
@@ -56,17 +52,14 @@ export class ReservaService {
     }
   }
 
-  // 🟩 Obtiene todas las reservas almacenadas
   obtenerReservas(): Reserva[] {
     return this.reservas;
   }
 
-  // 🟦 Obtiene las reservas asociadas a un usuario específico
   getReservasUsuario(userId: number): Reserva[] {
     return this.reservas.filter(r => r.userId === userId);
   }
 
-  // 🟥 Elimina todas las reservas del almacenamiento
   async limpiarReservas() {
     this.reservas = [];
     await this._storage?.set('reservas', this.reservas);

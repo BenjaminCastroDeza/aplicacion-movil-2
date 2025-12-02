@@ -13,17 +13,14 @@ export class BdlocalService {
 
   usuarioActual: Usuario | null = null;
 
-  private initialized = false; // <- evita ejecutar init() dos veces
+  private initialized = false;
 
   constructor(private storage: Storage, private toastController: ToastController) {
     this.init();
   }
 
-  /** ============================================
-   *  INIT (solo se ejecuta 1 vez)
-   *  ============================================ */
   async init() {
-    if (this.initialized) return; // ← evita loop
+    if (this.initialized) return;
     this.initialized = true;
 
     this._storage = await this.storage.create();
@@ -32,10 +29,6 @@ export class BdlocalService {
 
     console.log('BdlocalService inicializado');
   }
-
-  /** ============================================
-   *  GENERAR ID
-   *  ============================================ */
   async generarIdIncremental(claveContador: string): Promise<number> {
     const contador = (await this._storage?.get(claveContador)) || 0;
     const nuevoId = contador + 1;
@@ -43,9 +36,7 @@ export class BdlocalService {
     return nuevoId;
   }
 
-  /** ============================================
-   *  CRUD USUARIOS
-   *  ============================================ */
+  // CRUD USUARIOS
   async guardarUsuario(nombre: string, correo: string, contrasena: string, telefono: string) {
     const nuevo = new Usuario(nombre, correo, contrasena, telefono);
     nuevo.id = await this.generarIdIncremental('contadorUsuarios');
@@ -71,10 +62,7 @@ export class BdlocalService {
     return this.agenda;
   }
 
-  /** ============================================
-   *  SESIÓN
-   *  ============================================ */
-
+  //SESIÓN
   async setUsuarioActual(usuario: Usuario | null) {
     this.usuarioActual = usuario;
 
@@ -103,7 +91,6 @@ export class BdlocalService {
     this.presentToast('Has cerrado sesión');
   }
 
-  /** ============================================ */
   async presentToast(msg: string) {
     const toast = await this.toastController.create({
       message: msg,
